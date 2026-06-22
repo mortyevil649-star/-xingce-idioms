@@ -1,20 +1,22 @@
 # 项目维护说明
 
-## 结构
+## 数据源
 
-- `工作簿1.xlsx`：成语标题唯一数据源。
-- `src/config/exam.ts`：考试标题、日期、时区配置。
-- `src/data/idioms.ts`：为 Excel 名单补充页面所需学习字段。
-- `src/pages`：首页、列表、详情、随机抽查。
-- `src/components`：布局、成语卡片、重点读音标签。
-- `src/store.ts`：localStorage 学习记录读写。
+线上唯一数据源是 Supabase。`src/data/idioms.ts` 和 Excel 只作历史备份及首次导入，不得再被前台主逻辑引用。
 
-## 数据同步规则
+## 主要结构
 
-网站展示的成语必须与 `工作簿1.xlsx` 第一列严格一致。不得在代码中自行添加表格之外的成语。Excel 新增、删除或修改成语后，必须同步更新 `src/data/idioms.ts`，并核对两边标题集合完全相同。
+- `supabase/migrations/`：数据库 schema、RLS、触发器和 Realtime。
+- `src/lib/supabase.ts`：仅使用 URL 与 publishable key 的浏览器客户端。
+- `src/hooks/useIdioms.ts`：公开或管理员成语查询与 Realtime。
+- `src/contexts/`：Auth 会话、管理员角色和个人学习数据。
+- `src/pages/admin/`：管理员登录、管理列表和编辑表单。
+- `scripts/import-idioms.ts`：历史备份可重复导入。
 
-每条记录必须符合 `Idiom` 接口，`id` 全局唯一且稳定。`category`、`difficulty`、`status` 必须使用类型中已有枚举值。`pinyin` 字段仅为兼容导入保留，页面禁止展示完整拼音。
+## 安全规则
 
-仅当存在易读错、多音字、古音或高频考查读音时填写 `keyPronunciations`。释义、误用、例句应以权威词典或官方语料核验，无法确认时写“待人工核对”，不得编造。
+所有 public 表必须保持 RLS 开启。管理写入必须经过 `is_admin()` 策略，个人数据必须限制 `auth.uid() = user_id`。不要把路径隐藏当成权限控制。
 
-数据同步后运行 `npm run build`，并检查首页总数、搜索结果、详情页和随机抽查。
+禁止把 service role、secret key、`sb_secret_`、数据库密码或管理员密码写入源码、README、Vercel 客户端环境变量或 Git。环境变量示例只能使用占位值。
+
+修改数据库结构时新增 migration，不要改写已经在线执行过的 migration。完成后运行 `npm run build`。

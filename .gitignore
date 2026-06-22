@@ -14,6 +14,7 @@ vite.config.d.ts
 
 # Local workspace metadata and temporary files
 .agents/
+password.txt
 ~$*.xlsx
 .DS_Store
 Thumbs.db

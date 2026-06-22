@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { StudyProvider } from './contexts/StudyContext'
 import App from './App'
 import '@fontsource/dm-sans/700.css'
 import '@fontsource/dm-sans/800.css'
 import './styles.css'
-ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><BrowserRouter><App/></BrowserRouter></React.StrictMode>)
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><BrowserRouter><AuthProvider><StudyProvider><App/></StudyProvider></AuthProvider></BrowserRouter></React.StrictMode>)
