@@ -1,0 +1,2 @@
+import type { KeyPronunciation } from '../data/idioms'
+export function Pronunciation({items,detail=false}:{items?:KeyPronunciation[],detail?:boolean}){if(!items?.length)return null;return <div className="mt-2"><div className="flex flex-wrap gap-2">{items.map(x=><span key={x.char} className="chip bg-amber-100 text-amber-900">重点读音：{x.char}（{x.reading}）</span>)}</div>{detail&&items.map(x=>x.note&&<p key={x.char} className="mt-2 text-sm text-amber-800"><b>易读错提示：</b>{x.note}</p>)}</div>}

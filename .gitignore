@@ -1,0 +1,19 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# TypeScript and Vite generated files
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+
+# Local workspace metadata and temporary files
+.agents/
+~$*.xlsx
+.DS_Store
+Thumbs.db
