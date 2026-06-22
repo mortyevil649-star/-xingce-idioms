@@ -2,7 +2,7 @@
 
 ## 数据源
 
-线上唯一数据源是 Supabase。`src/data/idioms.ts` 和 Excel 只作历史备份及首次导入，不得再被前台主逻辑引用。
+公共成语内容的唯一编辑来源是 `data/idioms.xlsx` 的 `Idioms_Data` 工作表，线上运行数据源是 Supabase。`src/data/idioms.ts` 只作历史备份，不得再被前台主逻辑引用。修改 Excel 后先运行 `npm run sync:idioms`，再运行 `npm run sync`。
 
 ## 主要结构
 
@@ -12,6 +12,8 @@
 - `src/contexts/`：Auth 会话、管理员角色和个人学习数据。
 - `src/pages/admin/`：管理员登录、管理列表和编辑表单。
 - `scripts/import-idioms.ts`：历史备份可重复导入。
+- `scripts/sync-idioms-to-supabase.ts`：Excel 校验与 Supabase 增量同步。
+- `data/idioms.xlsx`：公共成语内容唯一编辑来源。
 
 ## 安全规则
 
