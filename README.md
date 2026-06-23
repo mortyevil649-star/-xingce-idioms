@@ -169,3 +169,38 @@ npm run sync
 完成后会输出新增、更新、隐藏、跳过、失败数量，以及 `idioms` 和 `idiom_examples` 当前总数。
 
 成语同步后不需要重新部署 Vercel，网站会从 Supabase 自动读取并通过 Realtime 获取最新内容。只有修改网站功能、代码或样式时才需要提交 Git 并重新部署。
+
+## 前台用户登录与 Supabase Auth
+
+前台用户登录页面：
+
+- `/login`：普通用户登录。
+- `/register`：普通用户注册。
+- `/forgot-password`：发送密码重置邮件。
+- `/reset-password`：设置新密码。
+
+管理员后台登录页仍然是 `/admin/login`，不要和普通用户登录混用。普通用户可以登录前台保存收藏、学习状态、个人笔记、我的例句和下次复习日期；只有 `profiles.role = admin` 的账号才能进入 `/admin`。
+
+### Supabase Authentication 配置
+
+在 Supabase Dashboard 打开 `Authentication` -> `URL Configuration`，配置：
+
+- `Site URL`：填写 Vercel 正式网址，例如 `https://你的域名.vercel.app`。
+- `Redirect URLs` 至少加入：
+  - `http://localhost:5173`
+  - `http://localhost:5173/login`
+  - `http://localhost:5173/reset-password`
+  - `https://你的域名.vercel.app`
+  - `https://你的域名.vercel.app/login`
+  - `https://你的域名.vercel.app/reset-password`
+
+如果你使用自定义域名，也要把自定义域名对应的 `/login` 和 `/reset-password` 加入 Redirect URLs。邮箱验证和忘记密码邮件里的跳转地址必须在 Supabase Redirect URLs 允许列表中，否则用户会无法回到网站完成登录或重置密码。
+
+### 前端环境变量安全边界
+
+Vercel 前端环境变量只允许填写：
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+
+不要把用户密码、数据库密码、`service_role key`、`secret key` 或任何 `sb_secret_` 开头的 key 写入 Vercel 前端环境变量、README、源码或 GitHub。

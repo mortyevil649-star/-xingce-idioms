@@ -8,6 +8,7 @@ import { Quiz } from './pages/Quiz'
 import { AdminIdiomFormPage } from './pages/admin/AdminIdiomForm'
 import { AdminIdiomListPage } from './pages/admin/AdminIdiomListPage'
 import { AdminLoginPage } from './pages/admin/AdminLogin'
+import { ForgotPasswordPage, LoginPage, RegisterPage, ResetPasswordPage } from './pages/auth/AuthPages'
 
 export default function App() {
   return <Routes>
@@ -24,6 +25,10 @@ export default function App() {
       <Route path="/idioms" element={<IdiomList />} />
       <Route path="/idioms/:id" element={<IdiomDetail />} />
       <Route path="/quiz" element={<Quiz />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
     </Route>
 
     <Route path="*" element={<NotFoundPage />} />

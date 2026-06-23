@@ -9,6 +9,9 @@ interface AuthValue {
   loading: boolean
   configured: boolean
   signIn: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string) => Promise<{ needsEmailConfirmation: boolean }>
+  sendPasswordReset: (email: string) => Promise<void>
+  updatePassword: (password: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -20,18 +23,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!supabase) { setLoading(false); return }
-    supabase.auth.getSession().then(({ data }) => { setSession(data.session); if (!data.session) setLoading(false) })
-    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => { setSession(nextSession); if (!nextSession) setLoading(false) })
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      if (!data.session) setLoading(false)
+    })
+    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession)
+      if (!nextSession) {
+        setIsAdmin(false)
+        setLoading(false)
+      }
+    })
     return () => data.subscription.unsubscribe()
   }, [])
 
   useEffect(() => {
-    if (!supabase || !session?.user) { setIsAdmin(false); setLoading(false); return }
+    if (!supabase || !session?.user) {
+      setIsAdmin(false)
+      setLoading(false)
+      return
+    }
     setLoading(true)
     let active = true
     supabase.from('profiles').select('role').eq('id', session.user.id).maybeSingle()
-      .then(({ data }) => { if (active) { setIsAdmin(data?.role === 'admin'); setLoading(false) } })
+      .then(({ data }) => {
+        if (active) {
+          setIsAdmin(data?.role === 'admin')
+          setLoading(false)
+        }
+      })
     return () => { active = false }
   }, [session?.user.id])
 
@@ -42,8 +66,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     configured: isSupabaseConfigured,
     signIn: async (email, password) => {
-      if (!supabase) throw new Error('Supabase 环境变量缺失')
+      if (!supabase) throw new Error('Supabase 环境变量缺失。')
       const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) throw error
+    },
+    signUp: async (email, password) => {
+      if (!supabase) throw new Error('Supabase 环境变量缺失。')
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/login` },
+      })
+      if (error) throw error
+      return { needsEmailConfirmation: !data.session }
+    },
+    sendPasswordReset: async (email) => {
+      if (!supabase) throw new Error('Supabase 环境变量缺失。')
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      })
+      if (error) throw error
+    },
+    updatePassword: async (password) => {
+      if (!supabase) throw new Error('Supabase 环境变量缺失。')
+      const { error } = await supabase.auth.updateUser({ password })
       if (error) throw error
     },
     signOut: async () => {
