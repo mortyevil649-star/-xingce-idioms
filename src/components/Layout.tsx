@@ -1,6 +1,8 @@
 import { BookOpen, House, LogIn, LogOut, Settings, Shuffle, UserRound } from 'lucide-react'
+import { useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { ConfirmDialog } from './ConfirmDialog'
 
 const nav = [
   ['/', '首页', House],
@@ -11,6 +13,7 @@ const nav = [
 export function Layout() {
   const { user, isAdmin, signOut } = useAuth()
   const location = useLocation()
+  const [confirmingSignOut, setConfirmingSignOut] = useState(false)
 
   return <div className="min-h-screen">
     <header className="sticky top-0 z-20 border-b border-indigo-100 bg-white/90 backdrop-blur">
@@ -42,7 +45,7 @@ export function Layout() {
               {isAdmin && <NavLink to="/admin" className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-2 text-sm font-bold text-slate-700">
                 <Settings size={16} /><span className="hidden sm:inline">管理后台</span>
               </NavLink>}
-              <button onClick={() => void signOut()} className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-bold text-slate-500 hover:text-rose-600">
+              <button onClick={() => setConfirmingSignOut(true)} className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-bold text-slate-500 hover:text-rose-600">
                 <LogOut size={16} /><span className="hidden min-[390px]:inline">退出</span>
               </button>
             </>}
@@ -52,5 +55,17 @@ export function Layout() {
     </header>
     <main className="mx-auto w-full max-w-6xl px-3 py-5 sm:px-4 sm:py-10"><Outlet /></main>
     <footer className="mx-auto max-w-6xl px-3 py-7 text-center text-xs text-slate-400 sm:px-4 sm:py-8">行测成语积累 · 学得慢一点，记得牢一点</footer>
+    <ConfirmDialog
+      open={confirmingSignOut}
+      title="退出登录？"
+      description="退出后，本机将不再显示当前账号的学习记录；重新登录后可以继续同步。"
+      cancelText="继续学习"
+      confirmText="退出登录"
+      onCancel={() => setConfirmingSignOut(false)}
+      onConfirm={() => {
+        setConfirmingSignOut(false)
+        void signOut()
+      }}
+    />
   </div>
 }
