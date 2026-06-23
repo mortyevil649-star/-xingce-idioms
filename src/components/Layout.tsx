@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { ConfirmDialog } from './ConfirmDialog'
+import { ThemeToggle } from './ThemeToggle'
 
 const nav = [
   ['/', '首页', House],
@@ -32,6 +33,7 @@ export function Layout() {
             </NavLink>)}
           </nav>
           <div className="flex min-w-0 flex-wrap items-center justify-end gap-1">
+            <ThemeToggle />
             {!user ? <NavLink
               to="/login"
               state={{ from: { pathname: location.pathname, search: location.search } }}

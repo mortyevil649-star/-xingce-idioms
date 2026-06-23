@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { ConfirmDialog } from './ConfirmDialog'
+import { ThemeToggle } from './ThemeToggle'
 
 export function AdminGuard() {
   const { user, isAdmin, loading, signOut } = useAuth()
@@ -38,6 +39,7 @@ export function AdminGuard() {
         <Link to="/admin" className="min-w-0 truncate text-sm font-bold text-indigo-950 sm:text-base">行测成语管理台</Link>
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <span className="hidden max-w-48 truncate text-xs text-slate-500 md:inline">{user.email}</span>
+          <ThemeToggle />
           <Link to="/admin/idioms/new" className="btn btn-primary px-3 py-2 text-sm"><Plus size={16} />新增</Link>
           <button onClick={confirmSignOut} className="focus-ring flex size-11 items-center justify-center rounded-lg text-slate-500" aria-label="退出登录"><LogOut size={18} /></button>
         </div>

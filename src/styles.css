@@ -5,6 +5,12 @@
   color: #20253a;
   background: #f5f7fb;
   font-synthesis: none;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+  background: #07111f;
 }
 
 * { box-sizing: border-box; }
@@ -57,6 +63,134 @@ button:disabled { cursor: not-allowed; }
 .btn-soft { background: #eef2ff; color: #3730a3; }
 .btn-soft:hover { background: #e0e7ff; }
 .btn-danger { background: #fff1f2; color: #be123c; }
+
+html.dark body {
+  background: #07111f;
+  color: #dbe6f6;
+}
+
+html.dark .paper {
+  background: #0f172a;
+  border-color: #263247;
+  box-shadow: 0 16px 46px rgba(0,0,0,.28);
+}
+
+html.dark header,
+html.dark .bg-white,
+html.dark .bg-white\/90 {
+  background-color: rgba(15,23,42,.94);
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-slate-100,
+html.dark .hover\:bg-slate-100:hover {
+  background-color: #162033;
+}
+
+html.dark .bg-indigo-50,
+html.dark .bg-indigo-50\/50,
+html.dark .bg-indigo-50\/70 {
+  background-color: rgba(49,46,129,.28);
+}
+
+html.dark .bg-indigo-950 {
+  background-color: #111827;
+}
+
+html.dark .bg-amber-50,
+html.dark .bg-amber-100 {
+  background-color: rgba(146,64,14,.24);
+}
+
+html.dark .bg-emerald-50,
+html.dark .bg-emerald-100 {
+  background-color: rgba(6,95,70,.24);
+}
+
+html.dark .bg-rose-50,
+html.dark .bg-rose-100,
+html.dark .btn-danger {
+  background-color: rgba(159,18,57,.22);
+}
+
+html.dark .text-indigo-950,
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700 {
+  color: #eaf0ff;
+}
+
+html.dark .text-slate-600,
+html.dark .text-slate-500,
+html.dark .text-slate-400 {
+  color: #9fb0c8;
+}
+
+html.dark .text-indigo-700,
+html.dark .text-indigo-800,
+html.dark .text-indigo-600 {
+  color: #aebcff;
+}
+
+html.dark .text-amber-700,
+html.dark .text-amber-800,
+html.dark .text-amber-600 {
+  color: #f7c76f;
+}
+
+html.dark .text-emerald-700,
+html.dark .text-emerald-600 {
+  color: #76e2b4;
+}
+
+html.dark .text-rose-700,
+html.dark .text-rose-600,
+html.dark .text-rose-500 {
+  color: #fda4af;
+}
+
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-indigo-100,
+html.dark .border-indigo-700,
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #263247;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #111c2f;
+  border-color: #2b3a52;
+  color: #eaf0ff;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #718198;
+}
+
+html.dark .chip {
+  border-color: #34435a;
+}
+
+html.dark .btn-primary {
+  background: #4f46e5;
+  color: #fff;
+}
+
+html.dark .btn-primary:hover {
+  background: #4338ca;
+}
+
+html.dark .btn-soft {
+  background: rgba(79,70,229,.22);
+  color: #c7d2fe;
+}
+
+html.dark footer {
+  color: #718198;
+}
 
 @media (min-width: 640px) {
   .countdown-number { font-size: 96px; }

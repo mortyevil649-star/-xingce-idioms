@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useStudy } from '../contexts/StudyContext'
 import { Pronunciation } from './Pronunciation'
 import { LoginRequiredLink } from './LoginRequiredLink'
+import { getExamFrequencyLabel } from '../lib/examFrequency'
 
 export function IdiomCard({ idiom }: { idiom: Idiom }) {
   const { user } = useAuth()
@@ -13,6 +14,7 @@ export function IdiomCard({ idiom }: { idiom: Idiom }) {
   const record = records[idiom.id]
   const hasNote = Boolean(record?.personal_note || record?.personal_mistake_reminder || examples[idiom.id]?.length)
   const mastered = record?.status === '已掌握'
+  const frequencyLabel = getExamFrequencyLabel(idiom)
   const update = async (patch: Parameters<typeof saveStudy>[1]) => {
     if (!user) return
     await saveStudy(idiom.id, patch)
@@ -43,6 +45,7 @@ export function IdiomCard({ idiom }: { idiom: Idiom }) {
       <div className="mt-4 flex min-w-0 flex-wrap gap-2">
         <span className="chip bg-indigo-50 text-indigo-700">{idiom.category}</span>
         <span className="chip bg-slate-100 text-slate-600">{idiom.difficulty}</span>
+        {frequencyLabel && <span className="chip bg-amber-50 text-amber-700">{frequencyLabel}</span>}
         {idiom.tags.slice(0, 2).map(tag => <span key={tag} className="chip border border-slate-200 text-slate-500">#{tag}</span>)}
       </div>
     </Link>
