@@ -77,6 +77,27 @@ async function readAndValidate(){
 
 const payload=(record:ExcelIdiom)=>({code:record.code,title:record.title,key_pronunciations:record.key_pronunciations,pronunciation_note:record.pronunciation_note,category:record.category,tags:record.tags,meaning:record.meaning,common_mistake:record.common_mistake,applicable_objects:record.applicable_objects,common_collocations:record.common_collocations,usage_restrictions:record.usage_restrictions,difficulty:record.difficulty,source:record.source,is_visible:record.is_visible,sort_order:record.sort_order})
 const changed=(old:Record<string,unknown>,record:ExcelIdiom)=>Object.entries(payload(record)).some(([key,value])=>!equal(old[key],value))
+const formatError=(error:unknown)=>{
+  if(error instanceof Error)return error.message
+  if(error&&typeof error==='object')return JSON.stringify(error)
+  return String(error)
+}
+const decodeJwtRole=(key:string)=>{
+  const parts=key.split('.')
+  if(parts.length!==3)return null
+  try{
+    const payload=JSON.parse(Buffer.from(parts[1],'base64url').toString('utf8')) as {role?:string}
+    return payload.role??null
+  }catch{
+    return null
+  }
+}
+const assertWritableKey=(key:string)=>{
+  if(key.startsWith('sb_publishable_'))throw new Error('无法同步：SUPABASE_SERVICE_ROLE_KEY 当前填的是 publishable key，只能用于前端读取，不能写入 idioms。请改填 service_role key 或 sb_secret_ 开头的 secret key。')
+  if(key.startsWith('sb_secret_'))return
+  const role=decodeJwtRole(key)
+  if(role&&role!=='service_role')throw new Error(`无法同步：SUPABASE_SERVICE_ROLE_KEY 当前 JWT role 是 ${role}，不能绕过 RLS 写入 idioms。请改填 role 为 service_role 的 key。`)
+}
 
 async function sync(client:SupabaseClient,records:ExcelIdiom[]){
   const {data:existingRows,error:readError}=await client.from('idioms').select('*')
@@ -113,7 +134,7 @@ async function sync(client:SupabaseClient,records:ExcelIdiom[]){
       else if(idiomChanged||examplesChanged)updated++
       else skipped++
       if(!record.is_visible&&(!existing||existing.is_visible!==false))hidden++
-    }catch(error){failed++;console.error(`失败：第 ${record.row} 行 ${record.code} ${record.title}：${error instanceof Error?error.message:String(error)}`)}
+    }catch(error){failed++;console.error(`失败：第 ${record.row} 行 ${record.code} ${record.title}：${formatError(error)}`)}
   }
   const [idiomCount,exampleCount]=await Promise.all([client.from('idioms').select('*',{count:'exact',head:true}),client.from('idiom_examples').select('*',{count:'exact',head:true})])
   console.log('\n同步结果')
@@ -128,8 +149,9 @@ async function main(){
   dotenv.config({path:resolve('.env.sync.local'),quiet:true})
   const missing=['SUPABASE_URL','SUPABASE_SERVICE_ROLE_KEY'].filter(name=>!process.env[name]?.trim())
   if(missing.length)throw new Error(`无法同步：.env.sync.local 缺少 ${missing.join('、')}`)
+  assertWritableKey(process.env.SUPABASE_SERVICE_ROLE_KEY!)
   const client=createClient(process.env.SUPABASE_URL!,process.env.SUPABASE_SERVICE_ROLE_KEY!,{auth:{persistSession:false,autoRefreshToken:false}})
   await sync(client,records)
 }
 
-main().catch(error=>{console.error(error instanceof Error?error.message:String(error));process.exitCode=1})
+main().catch(error=>{console.error(formatError(error));process.exitCode=1})
