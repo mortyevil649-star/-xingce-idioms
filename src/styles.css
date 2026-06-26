@@ -22,6 +22,11 @@ html.dark {
   background: #07111f;
 }
 
+html.eye {
+  color-scheme: light;
+  background: #f3f1df;
+}
+
 * { box-sizing: border-box; }
 html, body, #root { width: 100%; min-width: 0; }
 html, body { overflow-x: hidden; }
@@ -149,6 +154,123 @@ p, li, strong, span, h1, h2, h3 { overflow-wrap: anywhere; }
 html.dark body {
   background: #07111f;
   color: #dbe6f6;
+}
+
+html.eye body {
+  background:
+    radial-gradient(circle at top left, rgba(217, 231, 191, .36), transparent 32rem),
+    #f3f1df;
+  color: #273822;
+}
+
+html.eye .paper {
+  background: #fffdf0;
+  border-color: #d9d8bd;
+  box-shadow: 0 14px 34px rgba(68, 85, 45, .08);
+}
+
+html.eye header,
+html.eye .bg-white,
+html.eye .bg-white\/90 {
+  background-color: rgba(255, 253, 240, .94);
+}
+
+html.eye .bg-slate-50,
+html.eye .bg-slate-100,
+html.eye .hover\:bg-slate-100:hover {
+  background-color: #eeecd8;
+}
+
+html.eye .bg-indigo-50,
+html.eye .bg-indigo-50\/50,
+html.eye .bg-indigo-50\/70 {
+  background-color: rgba(224, 231, 204, .72);
+}
+
+html.eye .bg-indigo-950 {
+  background-color: #243b35;
+}
+
+html.eye .text-indigo-950,
+html.eye .text-slate-900,
+html.eye .text-slate-800,
+html.eye .text-slate-700 {
+  color: #26351f;
+}
+
+html.eye .text-slate-600,
+html.eye .text-slate-500,
+html.eye .text-slate-400 {
+  color: #65715a;
+}
+
+html.eye .text-indigo-700,
+html.eye .text-indigo-800,
+html.eye .text-indigo-600 {
+  color: #3f6f56;
+}
+
+html.eye .border-slate-100,
+html.eye .border-slate-200,
+html.eye .border-indigo-100,
+html.eye .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #d9d8bd;
+}
+
+html.eye input,
+html.eye select,
+html.eye textarea {
+  background-color: #fffdf0;
+  border-color: #d7d5b8;
+  color: #26351f;
+}
+
+html.eye .btn-primary {
+  background: #3f6f56;
+  color: #fff;
+}
+
+html.eye .btn-primary:hover {
+  background: #345c48;
+}
+
+html.eye .btn-soft,
+html.eye .status-primary {
+  border-color: #cbd8b6;
+  background: #edf4df;
+  color: #345c48;
+}
+
+html.eye .status-idle,
+html.eye .status-hidden,
+html.eye .btn-quiet {
+  border-color: #d9d8bd;
+  background: #f7f5e5;
+  color: #65715a;
+}
+
+html.eye .status-review,
+html.eye .status-favorite {
+  border-color: #e4d29a;
+  background: #fff7d6;
+  color: #8a5a12;
+}
+
+html.eye .status-mastered {
+  border-color: #b7d5a5;
+  background: #edf7e9;
+  color: #2f6b3f;
+}
+
+html.eye .status-mistake,
+html.eye .btn-danger {
+  border-color: #e8b9ad;
+  background: #fff0ec;
+  color: #a84531;
+}
+
+html.eye .meta-text {
+  color: #65715a;
 }
 
 html.dark .paper {

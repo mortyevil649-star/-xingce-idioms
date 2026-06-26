@@ -1,40 +1,44 @@
-import { Moon, Sun } from 'lucide-react'
+import { Leaf, Moon, Sun } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const storageKey = 'xingce-theme'
+type ThemeMode = 'light' | 'dark' | 'eye'
 
-function preferredDark() {
-  if (typeof window === 'undefined') return false
+function preferredTheme(): ThemeMode {
+  if (typeof window === 'undefined') return 'light'
   const stored = window.localStorage.getItem(storageKey)
-  if (stored === 'dark') return true
-  if (stored === 'light') return false
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
+  if (stored === 'dark' || stored === 'light' || stored === 'eye') return stored
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-function applyTheme(isDark: boolean) {
-  document.documentElement.classList.toggle('dark', isDark)
+function applyTheme(mode: ThemeMode) {
+  document.documentElement.classList.toggle('dark', mode === 'dark')
+  document.documentElement.classList.toggle('eye', mode === 'eye')
 }
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(() => preferredDark())
+  const [mode, setMode] = useState<ThemeMode>(() => preferredTheme())
+  const nextMode = mode === 'light' ? 'dark' : mode === 'dark' ? 'eye' : 'light'
+  const label = mode === 'light' ? '浅色' : mode === 'dark' ? '深色' : '护眼'
+  const nextLabel = nextMode === 'light' ? '浅色' : nextMode === 'dark' ? '深色' : '护眼'
 
   useEffect(() => {
-    applyTheme(isDark)
-    window.localStorage.setItem(storageKey, isDark ? 'dark' : 'light')
-  }, [isDark])
+    applyTheme(mode)
+    window.localStorage.setItem(storageKey, mode)
+  }, [mode])
 
   return <button
     type="button"
-    onClick={() => setIsDark(value => !value)}
+    onClick={() => setMode(nextMode)}
     className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 py-2 text-sm font-bold text-slate-500 hover:bg-slate-100 hover:text-indigo-700"
-    aria-label={isDark ? '切换浅色模式' : '切换深色模式'}
-    title={isDark ? '切换浅色模式' : '切换深色模式'}
+    aria-label={`切换到${nextLabel}模式`}
+    title={`切换到${nextLabel}模式`}
   >
-    {isDark ? <Sun size={17} /> : <Moon size={17} />}
-    <span className="hidden sm:ml-1 sm:inline">{isDark ? '浅色' : '深色'}</span>
+    {mode === 'light' ? <Sun size={17} /> : mode === 'dark' ? <Moon size={17} /> : <Leaf size={17} />}
+    <span className="hidden sm:ml-1 sm:inline">{label}</span>
   </button>
 }
 
 export function initTheme() {
-  applyTheme(preferredDark())
+  applyTheme(preferredTheme())
 }

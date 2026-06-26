@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, CheckCircle2, Clock3, Shuffle, TriangleAlert } from 'lucide-react'
+import { ArrowRight, BookOpen, CalendarCheck2, CheckCircle2, Clock3, Shuffle, TriangleAlert } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import { examConfig } from '../config/exam'
@@ -34,12 +34,42 @@ const dailyTips = [
   },
 ]
 
+const encouragements = [
+  '真正拉开差距的，不是某一天学很多，而是每一天都没有断线。',
+  '把今天这一点点弄明白，考场上就少一个模糊选项。',
+  '慢慢来，但别停下。成语积累最怕急，也最奖励坚持。',
+  '今天记住一个适用对象，明天就能少踩一个语境陷阱。',
+  '你不是在背一堆词，而是在训练自己更准确地判断语境。',
+]
+
+function getTodayKey() {
+  const today = new Date()
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+}
+
+function updateCheckinStreak() {
+  if (typeof window === 'undefined') return 1
+  const todayKey = getTodayKey()
+  const lastKey = window.localStorage.getItem('xingce-checkin-date')
+  const current = Number(window.localStorage.getItem('xingce-checkin-streak') || '0')
+  if (lastKey === todayKey) return Math.max(1, current || 1)
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  const yesterdayKey = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`
+  const next = lastKey === yesterdayKey ? current + 1 : 1
+  window.localStorage.setItem('xingce-checkin-date', todayKey)
+  window.localStorage.setItem('xingce-checkin-streak', String(next))
+  return next
+}
+
 export function Home() {
   const { idioms, loading, error } = useIdioms()
   const { records } = useStudy()
   const [reviewSize, setReviewSize] = useState(10)
+  const [streakDays, setStreakDays] = useState(1)
   const [, setTick] = useState(0)
   useEffect(() => { const timer = setInterval(() => setTick(value => value + 1), 60000); return () => clearInterval(timer) }, [])
+  useEffect(() => setStreakDays(updateCheckinStreak()), [])
   const days = Math.max(0, Math.ceil((new Date(examConfig.targetDate).getTime() - Date.now()) / 86400000))
   const recordValues = Object.values(records)
   const mastered = recordValues.filter(item => item.status === '已掌握').length
@@ -50,6 +80,10 @@ export function Home() {
   const dailyTip = useMemo(() => {
     const dayIndex = Math.floor(Date.now() / 86400000) % dailyTips.length
     return dailyTips[dayIndex]
+  }, [])
+  const encouragement = useMemo(() => {
+    const dayIndex = Math.floor(Date.now() / 86400000) % encouragements.length
+    return encouragements[dayIndex]
   }, [])
 
   return <div>
@@ -97,6 +131,21 @@ export function Home() {
           {typeof Icon !== 'string' && typeof Icon !== 'number' && <Icon className={String(color)} size={20} />}
           <div><strong className="block text-2xl sm:mt-4 sm:text-3xl">{String(value)}</strong><span className="text-sm text-slate-500">{String(label)}</span></div>
         </div>)}
+        <div className="paper col-span-full overflow-hidden rounded-2xl p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-4">
+              <span className="status-mastered flex size-12 shrink-0 items-center justify-center rounded-2xl"><CalendarCheck2 size={22} /></span>
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-500">已坚持打卡天数</p>
+                <p className="mt-1 text-3xl font-extrabold leading-none text-indigo-950 sm:text-4xl">{streakDays}<span className="ml-1 text-base font-bold text-slate-500">天</span></p>
+              </div>
+            </div>
+            <div className="min-w-0 rounded-2xl bg-slate-50 p-4 sm:max-w-xl">
+              <p className="text-xs font-bold tracking-widest text-indigo-600">今日寄语</p>
+              <p className="mt-2 text-[15px] leading-7 text-slate-600">{encouragement}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
