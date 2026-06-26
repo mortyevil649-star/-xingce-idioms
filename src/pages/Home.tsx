@@ -3,15 +3,11 @@ import { Link } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 import { examConfig } from '../config/exam'
 import { Pronunciation } from '../components/Pronunciation'
-import { useAuth } from '../contexts/AuthContext'
 import { useStudy } from '../contexts/StudyContext'
 import { useIdioms } from '../hooks/useIdioms'
 
-const today = () => new Date().toISOString().slice(0, 10)
-
 export function Home() {
   const { idioms, loading, error } = useIdioms()
-  const { user } = useAuth()
   const { records } = useStudy()
   const [reviewSize, setReviewSize] = useState(10)
   const [, setTick] = useState(0)
@@ -20,7 +16,7 @@ export function Home() {
   const recordValues = Object.values(records)
   const mastered = recordValues.filter(item => item.status === '已掌握').length
   const mistakes = recordValues.filter(item => item.status === '易错').length
-  const dueReviews = recordValues.filter(item => item.status === '易错' || (item.next_review && item.next_review <= today())).length
+  const reviewCount = mastered
   const estimatedMinutes = Math.max(1, Math.ceil(reviewSize * 0.75))
   const random = useMemo(() => idioms.length ? idioms[Math.floor(Math.random() * idioms.length)] : null, [idioms])
 
@@ -54,13 +50,12 @@ export function Home() {
         <p className="text-xs font-bold tracking-widest text-amber-600">今日学习提示</p>
         <p className="display mt-3 text-lg font-bold leading-8 text-slate-800 sm:text-xl">先辨使用对象，再看常见搭配。遇到熟悉的词，也要停一秒。</p>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
           [idioms.length, '成语总数', BookOpen, 'text-indigo-700'],
           [mastered, '新掌握', CheckCircle2, 'text-emerald-600'],
-          [dueReviews, '每日复习', Clock3, 'text-amber-600'],
+          [reviewCount, '可复习', Clock3, 'text-amber-600'],
           [mistakes, '易错', TriangleAlert, 'text-rose-600'],
-          [user ? '已登录' : '未登录', '学习同步', BookOpen, 'text-indigo-700'],
         ].map(([value, label, Icon, color]) => <div key={String(label)} className="paper flex items-center gap-4 rounded-2xl p-4 sm:block sm:p-5">
           {typeof Icon !== 'string' && typeof Icon !== 'number' && <Icon className={String(color)} size={20} />}
           <div><strong className="block text-2xl sm:mt-4 sm:text-3xl">{String(value)}</strong><span className="text-sm text-slate-500">{String(label)}</span></div>
@@ -72,8 +67,8 @@ export function Home() {
       <div className="grid gap-5 lg:grid-cols-[1fr_280px] lg:items-center">
         <div>
           <p className="text-xs font-bold tracking-widest text-emerald-600">每日复习成语</p>
-          <h2 className="display mt-3 text-2xl font-bold text-indigo-950 sm:text-3xl">按一组一组来，少量多次更稳。</h2>
-          <p className="mt-3 text-[15px] leading-7 text-slate-500">优先复习到期、易错和已掌握成语。本组 {reviewSize} 个，预计约 {estimatedMinutes} 分钟。</p>
+          <h2 className="display mt-3 text-2xl font-bold text-indigo-950 sm:text-3xl">复习范围：已掌握成语。</h2>
+          <p className="mt-3 text-[15px] leading-7 text-slate-500">从你标记为“已掌握”的成语中生成复习组。本组 {reviewSize} 个，预计约 {estimatedMinutes} 分钟。</p>
         </div>
         <div className="rounded-2xl bg-slate-50 p-4">
           <label className="block text-sm font-bold text-slate-700">每组成语数量
