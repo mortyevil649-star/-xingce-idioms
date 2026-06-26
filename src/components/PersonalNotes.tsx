@@ -1,4 +1,4 @@
-import { ChevronDown, CirclePlus, NotebookPen, Save, Trash2 } from 'lucide-react'
+import { CirclePlus, NotebookPen, Save, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useStudy } from '../contexts/StudyContext'
@@ -11,7 +11,6 @@ export function PersonalNotes({ idiomId }: { idiomId: string }) {
   const { user } = useAuth()
   const { records, examples, saveStudy, saveExamples } = useStudy()
   const record = records[idiomId]
-  const [open, setOpen] = useState(false)
   const [note, setNote] = useState('')
   const [reminder, setReminder] = useState('')
   const [draftExamples, setDraftExamples] = useState<DraftExample[]>([])
@@ -43,20 +42,17 @@ export function PersonalNotes({ idiomId }: { idiomId: string }) {
   }
 
   return <section className="paper mt-6 min-w-0 overflow-hidden rounded-2xl sm:mt-8 sm:rounded-3xl">
-    <button type="button" aria-expanded={open} onClick={() => setOpen(value => !value)} className="focus-ring flex min-h-16 w-full min-w-0 items-center justify-between gap-3 p-5 text-left sm:gap-4 sm:p-8">
-      <span className="flex min-w-0 items-center gap-3">
-        <span className="shrink-0 rounded-xl bg-amber-100 p-2 text-amber-700"><NotebookPen size={20} /></span>
-        <span className="min-w-0">
-          <strong className="block text-lg text-indigo-950">我的笔记</strong>
-          <small className="mt-1 block break-words font-normal leading-5 text-slate-500">登录后在手机和电脑之间同步</small>
-        </span>
+    <div className="flex min-w-0 items-center gap-3 border-b border-slate-100 p-5 sm:p-8">
+      <span className="shrink-0 rounded-xl bg-amber-100 p-2 text-amber-700"><NotebookPen size={20} /></span>
+      <span className="min-w-0">
+        <strong className="block text-lg text-indigo-950">我的笔记</strong>
+        <small className="mt-1 block break-words font-normal leading-5 text-slate-500">登录后在手机和电脑之间同步</small>
       </span>
-      <ChevronDown className={`shrink-0 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} size={20} />
-    </button>
-    {open && (!user ? <div className="border-t border-slate-100 p-6 text-center sm:p-8">
+    </div>
+    {!user ? <div className="p-6 text-center sm:p-8">
       <p className="mx-auto max-w-sm text-[15px] leading-7 text-slate-500">登录后才能保存个人备注、我的例句和易错提醒。</p>
       <LoginRequiredLink className="mt-4 w-full sm:w-auto" />
-    </div> : <div className="min-w-0 border-t border-slate-100 p-5 sm:p-8">
+    </div> : <div className="min-w-0 p-5 sm:p-8">
       <label className="block text-sm font-bold text-slate-700">我的备注<textarea value={note} onChange={event => { setNote(event.target.value); setMessage('') }} rows={5} className="focus-ring mt-2 w-full resize-y rounded-xl border border-slate-200 bg-slate-50 p-3 font-normal leading-7 outline-none" /></label>
       <div className="mt-6">
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -78,6 +74,6 @@ export function PersonalNotes({ idiomId }: { idiomId: string }) {
         <button onClick={() => void clear()} className="btn w-full text-rose-600 hover:bg-rose-50 sm:w-auto"><Trash2 size={17} />清空本条个人笔记</button>
         {message && <span className="break-words text-sm font-bold text-emerald-700 sm:ml-auto">{message}</span>}
       </div>
-    </div>)}
+    </div>}
   </section>
 }

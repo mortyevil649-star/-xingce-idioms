@@ -5,6 +5,7 @@ import { Home } from './pages/Home'
 import { IdiomDetail } from './pages/IdiomDetail'
 import { IdiomList } from './pages/IdiomList'
 import { Quiz } from './pages/Quiz'
+import { Review } from './pages/Review'
 import { AdminIdiomFormPage } from './pages/admin/AdminIdiomForm'
 import { AdminIdiomListPage } from './pages/admin/AdminIdiomListPage'
 import { AdminLoginPage } from './pages/admin/AdminLogin'
@@ -25,6 +26,7 @@ export default function App() {
       <Route path="/idioms" element={<IdiomList />} />
       <Route path="/idioms/:id" element={<IdiomDetail />} />
       <Route path="/quiz" element={<Quiz />} />
+      <Route path="/review" element={<Review />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
