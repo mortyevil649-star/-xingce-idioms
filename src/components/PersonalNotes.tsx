@@ -64,7 +64,7 @@ export function PersonalNotes({ idiomId }: { idiomId: string }) {
           {draftExamples.map((item, index) => <div key={item.id} className="flex min-w-0 items-start gap-2">
             <span className="mt-3 shrink-0 text-xs text-slate-400">{index + 1}</span>
             <textarea value={item.content} onChange={event => setDraftExamples(draftExamples.map(old => old.id === item.id ? { ...old, content: event.target.value } : old))} rows={2} className="focus-ring min-w-0 flex-1 rounded-xl border border-slate-200 p-3" />
-            <button aria-label={`删除例句 ${index + 1}`} onClick={() => setDraftExamples(draftExamples.filter(old => old.id !== item.id))} className="flex size-11 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-rose-600"><Trash2 size={17} /></button>
+            <button aria-label={`删除例句 ${index + 1}`} onClick={() => setDraftExamples(draftExamples.filter(old => old.id !== item.id))} className="delete-plain flex size-11 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-rose-600"><Trash2 size={17} /></button>
           </div>)}
         </div>
       </div>

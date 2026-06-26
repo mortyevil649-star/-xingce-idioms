@@ -103,11 +103,35 @@ p, li, strong, span, h1, h2, h3 { overflow-wrap: anywhere; }
   box-shadow: none;
 }
 .btn-danger-quiet:hover {
-  background: #fff1f2;
+  border-color: transparent;
+  background: transparent;
+  color: #9f1239;
+  box-shadow: none;
+}
+.btn-danger-quiet:focus,
+.btn-danger-quiet:focus-visible {
+  outline: none;
   box-shadow: none;
 }
 .btn-danger-quiet:active {
+  transform: none;
   box-shadow: none;
+}
+.delete-plain {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+.delete-plain:hover,
+.delete-plain:focus,
+.delete-plain:focus-visible,
+.delete-plain:active {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  transform: none;
 }
 
 .section-title { color: var(--ink); font-size: 1rem; font-weight: 800; letter-spacing: -.01em; }
@@ -284,7 +308,8 @@ html.dark .btn-danger-quiet {
 }
 
 html.dark .btn-danger-quiet:hover {
-  background: rgba(159,18,57,.18);
+  background: transparent;
+  color: #fb7185;
 }
 
 html.dark .status-review,

@@ -6,6 +6,34 @@ import { Pronunciation } from '../components/Pronunciation'
 import { useStudy } from '../contexts/StudyContext'
 import { useIdioms } from '../hooks/useIdioms'
 
+const dailyTips = [
+  {
+    title: '先辨使用对象，再看常见搭配。',
+    detail: '今天学习时，先问自己：这个成语通常形容人、事情、文章，还是局面？对象辨准了，误用会少一大半。',
+    actions: ['圈出适用对象', '记 1 个常见搭配', '自写 1 个例句'],
+  },
+  {
+    title: '遇到熟悉的词，也要停一秒。',
+    detail: '很多高频易错成语不是“不认识”，而是“想当然”。先不要急着点已掌握，回看释义里的关键词。',
+    actions: ['复述准确释义', '标出易错点', '加入易混对比'],
+  },
+  {
+    title: '把褒贬色彩单独记出来。',
+    detail: '做言语题时，感情色彩往往比字面意思更快排除选项。今天重点留意褒义、贬义和中性表达。',
+    actions: ['判断褒贬', '找语境对象', '记录错因'],
+  },
+  {
+    title: '优先复习“会看错”的成语。',
+    detail: '如果一个成语总让你想到另一个意思，就把它放进易错提醒。短句提醒比长段解释更容易在考场唤醒记忆。',
+    actions: ['补一句提醒', '看标准例句', '明天再复习'],
+  },
+  {
+    title: '不要只背释义，要背使用场景。',
+    detail: '行测考查常把成语放进具体语境。记住“什么场景能用”，比单独背一句释义更稳。',
+    actions: ['看场景', '记搭配', '排除不适用对象'],
+  },
+]
+
 export function Home() {
   const { idioms, loading, error } = useIdioms()
   const { records } = useStudy()
@@ -19,6 +47,10 @@ export function Home() {
   const reviewCount = mastered
   const estimatedMinutes = Math.max(1, Math.ceil(reviewSize * 0.75))
   const random = useMemo(() => idioms.length ? idioms[Math.floor(Math.random() * idioms.length)] : null, [idioms])
+  const dailyTip = useMemo(() => {
+    const dayIndex = Math.floor(Date.now() / 86400000) % dailyTips.length
+    return dailyTips[dayIndex]
+  }, [])
 
   return <div>
     <section className="grid gap-4 sm:gap-5 lg:grid-cols-[1.35fr_.65fr]">
@@ -48,7 +80,12 @@ export function Home() {
     <section className="mt-4 grid gap-4 sm:mt-5 sm:gap-5 lg:grid-cols-[.8fr_1.2fr]">
       <div className="paper rounded-2xl p-5 sm:p-6">
         <p className="text-xs font-bold tracking-widest text-amber-600">今日学习提示</p>
-        <p className="display mt-3 text-lg font-bold leading-8 text-slate-800 sm:text-xl">先辨使用对象，再看常见搭配。遇到熟悉的词，也要停一秒。</p>
+        <p className="display mt-3 text-lg font-bold leading-8 text-slate-800 sm:text-xl">{dailyTip.title}</p>
+        <p className="mt-3 text-[15px] leading-7 text-slate-500">{dailyTip.detail}</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {dailyTip.actions.map(action => <span key={action} className="chip status-review">{action}</span>)}
+        </div>
+        <p className="mt-4 border-t border-slate-100 pt-4 text-xs leading-5 text-slate-400">小节奏：先学 5 个新成语，再复习已掌握成语，最后把一个易错点写进“我的笔记”。</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
