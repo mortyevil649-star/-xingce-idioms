@@ -11,14 +11,10 @@ const nav = [
   ['/quiz', '随机抽查', Shuffle],
 ] as const
 
-const friendLinks = [
-  ['国家公务员局', 'https://www.scs.gov.cn/'],
-  ['中国人事考试网', 'http://www.cpta.com.cn/'],
-  ['粉笔公考', 'https://www.fenbi.com/page/home'],
-  ['公考雷达', 'https://www.gongkaoleida.com/'],
-  ['汉典', 'https://www.zdic.net/'],
-  ['百度汉语', 'https://hanyu.baidu.com/'],
-  ['汉程成语', 'https://cy.httpcn.com/'],
+const socialLinks = [
+  ['B站', 'https://space.bilibili.com/85167755?spm_id_from=333.40164.0.0', 'bilibili'],
+  ['小红书', 'https://www.xiaohongshu.com/user/profile/62dbc5d1000000001e01db70', 'xiaohongshu'],
+  ['Discord', 'https://discord.com/channels/1520097496561352826/1520097497182240810', 'discord'],
 ] as const
 
 export function Layout() {
@@ -67,19 +63,26 @@ export function Layout() {
     </header>
     <main className="mx-auto w-full max-w-6xl px-3 py-5 sm:px-4 sm:py-10"><Outlet /></main>
     <footer className="mx-auto max-w-6xl px-3 py-7 text-center text-xs text-slate-400 sm:px-4 sm:py-8">
-      <div className="paper mb-5 rounded-2xl px-4 py-4 text-left sm:px-5">
-        <p className="text-xs font-bold tracking-widest text-slate-500">友情链接</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {friendLinks.map(([label, href]) => <a
-            key={href}
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            className="chip status-idle hover:text-indigo-700"
-          >
-            {label}
-          </a>)}
+      <div className="mb-5 flex flex-col items-center gap-4">
+        <div>
+          <p className="mb-3 text-xs font-bold tracking-widest text-slate-500">关注我</p>
+          <div className="flex items-center justify-center gap-3">
+            {socialLinks.map(([label, href, type]) => <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={label}
+              title={label}
+              className="focus-ring flex size-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 transition hover:-translate-y-0.5 hover:bg-indigo-50 hover:text-indigo-700"
+            >
+              <SocialIcon type={type} />
+            </a>)}
+          </div>
         </div>
+        <NavLink to="/friend-links" className="text-xs text-slate-400 hover:text-indigo-700">
+          友情链接
+        </NavLink>
       </div>
       <p>行测成语积累 · 学得慢一点，记得牢一点</p>
     </footer>
@@ -96,4 +99,25 @@ export function Layout() {
       }}
     />
   </div>
+}
+
+function SocialIcon({ type }: { type: typeof socialLinks[number][2] }) {
+  if (type === 'bilibili') {
+    return <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 5 6 3" />
+      <path d="m16 5 2-2" />
+      <rect x="3.5" y="6" width="17" height="13" rx="3" />
+      <path d="M9 11v3" />
+      <path d="M15 11v3" />
+      <path d="M10 17h4" />
+    </svg>
+  }
+  if (type === 'xiaohongshu') {
+    return <span aria-hidden="true" className="text-sm font-black leading-none">书</span>
+  }
+  return <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="currentColor">
+    <path d="M8.7 7.5c2.2-.7 4.4-.7 6.6 0 .3.1.5.3.6.6l1.3 6.1c.1.4-.2.8-.6.9-1 .2-2 .1-2.8-.4-.2-.1-.3-.3-.4-.5l-.3-.7a8.4 8.4 0 0 1-2.2 0l-.3.7c-.1.2-.2.4-.4.5-.9.5-1.8.6-2.8.4-.4-.1-.7-.5-.6-.9l1.3-6.1c.1-.3.3-.5.6-.6Z" />
+    <circle cx="9.8" cy="11.5" r="1" />
+    <circle cx="14.2" cy="11.5" r="1" />
+  </svg>
 }
