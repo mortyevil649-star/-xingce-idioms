@@ -38,7 +38,7 @@ function Field({ label, type, value, onChange, autoComplete }: { label: string; 
 
 function Message({ value, danger = false }: { value: string; danger?: boolean }) {
   if (!value) return null
-  return <p className={`mt-4 break-words rounded-xl p-3 text-sm leading-6 ${danger ? 'bg-rose-50 text-rose-700' : 'bg-emerald-50 text-emerald-700'}`}>{value}</p>
+  return <p className={`mt-4 break-words rounded-xl p-3 text-sm leading-6 ${danger ? 'notice-error' : 'notice-success'}`}>{value}</p>
 }
 
 export function LoginPage() {

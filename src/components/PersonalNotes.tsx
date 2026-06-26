@@ -43,7 +43,7 @@ export function PersonalNotes({ idiomId }: { idiomId: string }) {
 
   return <section className="paper mt-6 min-w-0 overflow-hidden rounded-2xl sm:mt-8 sm:rounded-3xl">
     <div className="flex min-w-0 items-center gap-3 border-b border-slate-100 p-5 sm:p-8">
-      <span className="shrink-0 rounded-xl bg-amber-100 p-2 text-amber-700"><NotebookPen size={20} /></span>
+      <span className="status-review shrink-0 rounded-xl p-2"><NotebookPen size={20} /></span>
       <span className="min-w-0">
         <strong className="block text-lg text-indigo-950">我的笔记</strong>
         <small className="mt-1 block break-words font-normal leading-5 text-slate-500">登录后在手机和电脑之间同步</small>
@@ -71,8 +71,8 @@ export function PersonalNotes({ idiomId }: { idiomId: string }) {
       <label className="mt-6 block text-sm font-bold text-slate-700">我的易错提醒<input value={reminder} onChange={event => { setReminder(event.target.value); setMessage('') }} className="focus-ring mt-2 min-h-11 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 font-normal" /></label>
       <div className="mt-7 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center">
         <button onClick={() => void save()} className="btn btn-primary w-full sm:w-auto"><Save size={17} />保存笔记</button>
-        <button onClick={() => void clear()} className="btn w-full text-rose-600 hover:bg-rose-50 sm:w-auto"><Trash2 size={17} />清空本条个人笔记</button>
-        {message && <span className="break-words text-sm font-bold text-emerald-700 sm:ml-auto">{message}</span>}
+        <button onClick={() => void clear()} className="btn btn-danger w-full sm:w-auto"><Trash2 size={17} />清空本条个人笔记</button>
+        {message && <span className={`break-words rounded-xl px-3 py-2 text-sm font-bold sm:ml-auto ${message.includes('失败') ? 'notice-error' : 'notice-success'}`}>{message}</span>}
       </div>
     </div>}
   </section>

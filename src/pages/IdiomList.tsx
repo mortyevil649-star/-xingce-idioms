@@ -67,8 +67,8 @@ export function IdiomList() {
         </select>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        {states.map(([key, label]) => <button key={key} onClick={() => setState(key)} className={`focus-ring chip min-h-11 ${state === key ? 'bg-indigo-700 text-white' : 'bg-slate-100 text-slate-600'}`}>{label}</button>)}
-        {(query || category || difficulty || state !== 'all' || sortKey !== 'default') && <button onClick={reset} className="chip min-h-11 text-slate-500"><X size={14} />清除筛选</button>}
+        {states.map(([key, label]) => <button key={key} onClick={() => setState(key)} className={`focus-ring chip min-h-11 ${state === key ? 'bg-indigo-700 text-white' : 'status-idle'}`}>{label}</button>)}
+        {(query || category || difficulty || state !== 'all' || sortKey !== 'default') && <button onClick={reset} className="chip status-idle min-h-11"><X size={14} />清除筛选</button>}
       </div>
     </div>
     {error && <p className="mt-5 rounded-xl bg-rose-50 p-4 text-sm text-rose-700">{error}</p>}

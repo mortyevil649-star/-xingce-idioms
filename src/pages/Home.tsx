@@ -28,7 +28,7 @@ export function Home() {
         <p className="mt-5 max-w-xl text-[15px] leading-7 text-indigo-200 sm:mt-6 sm:text-base">专注行测高频易错成语。内容由后台实时更新，无需重新部署。</p>
         <div className="mt-7 grid gap-3 sm:mt-8 sm:flex sm:flex-wrap">
           <Link className="btn w-full bg-white text-indigo-950 sm:w-auto" to="/idioms">开始学习 <ArrowRight size={18} /></Link>
-          <Link className="btn w-full border border-indigo-700 text-white sm:w-auto" to="/quiz"><Shuffle size={17} />随机抽查</Link>
+          <Link className="btn w-full border border-indigo-700/70 text-white sm:w-auto" to="/quiz"><Shuffle size={17} />随机抽查</Link>
         </div>
       </div>
       <div className="paper flex min-h-56 flex-col justify-between overflow-hidden rounded-2xl p-5 sm:min-h-64 sm:rounded-3xl sm:p-7">
@@ -88,7 +88,7 @@ export function Home() {
             <h2 className="display mt-3 break-words text-2xl font-bold text-indigo-950 sm:text-3xl">{random.title}</h2>
             <Pronunciation value={random.key_pronunciations} />
           </div>
-          <span className="chip hidden bg-indigo-50 text-indigo-700 sm:inline-flex">{random.category}</span>
+          <span className="chip status-primary hidden sm:inline-flex">{random.category}</span>
         </div>
         <p className="mt-5 max-w-3xl text-[15px] leading-8 text-slate-600 sm:text-base">{random.meaning}</p>
         <Link to={`/idioms/${random.id}`} className="mt-4 inline-flex min-h-11 items-center gap-1 text-sm font-bold text-indigo-700 sm:mt-5">查看详情 <ArrowRight size={16} /></Link>

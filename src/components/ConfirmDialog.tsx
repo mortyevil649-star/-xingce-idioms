@@ -21,7 +21,7 @@ export function ConfirmDialog({
       <h2 id="confirm-title" className="text-lg font-bold text-indigo-950">{title}</h2>
       <p className="mt-2 text-[15px] leading-7 text-slate-600">{description}</p>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <button type="button" onClick={onCancel} className="btn w-full bg-slate-100 text-slate-600">{cancelText}</button>
+        <button type="button" onClick={onCancel} className="btn btn-quiet w-full">{cancelText}</button>
         <button type="button" onClick={onConfirm} className="btn btn-primary w-full">{confirmText}</button>
       </div>
     </div>

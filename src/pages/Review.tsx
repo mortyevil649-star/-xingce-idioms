@@ -46,11 +46,11 @@ export function Review() {
             <h2 className="display mt-1 break-words text-2xl font-bold text-indigo-950">{idiom.title}</h2>
             <Pronunciation value={idiom.key_pronunciations} />
           </div>
-          <span className="chip bg-indigo-50 text-indigo-700">已掌握</span>
+          <span className="chip status-mastered">已掌握</span>
         </div>
         <p className="mt-4 break-words text-[15px] leading-8 text-slate-600">{idiom.meaning}</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
-          <button onClick={() => void mark(idiom.id, '已掌握')} className="btn w-full bg-emerald-100 text-emerald-700"><Check size={17} />仍掌握</button>
+          <button onClick={() => void mark(idiom.id, '已掌握')} className="btn status-mastered w-full"><Check size={17} />仍掌握</button>
           <button onClick={() => void mark(idiom.id, '易错')} className="btn btn-danger w-full"><TriangleAlert size={17} />标为易错</button>
           <Link to={`/idioms/${idiom.id}`} className="btn btn-soft w-full sm:w-auto">看详情</Link>
         </div>

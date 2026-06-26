@@ -72,8 +72,8 @@ export function Quiz() {
       {idioms.length > 0 && <button onClick={restart} className="btn btn-primary mt-7 w-full sm:mt-8 sm:w-auto"><RotateCw size={17} />重新开始一轮</button>}
     </div> : <div className="paper mt-6 min-h-80 min-w-0 rounded-2xl p-5 text-center sm:mt-8 sm:min-h-96 sm:rounded-3xl sm:p-12">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="chip bg-slate-100 text-slate-500">本轮 {seen.length} / {idioms.length}</span>
-        <button onClick={advance} className="focus-ring inline-flex min-h-11 items-center gap-1 rounded-lg px-3 py-2 text-sm font-bold text-indigo-700"><RefreshCw size={16} />刷新成语</button>
+        <span className="chip status-idle">本轮 {seen.length} / {idioms.length}</span>
+        <button onClick={advance} className="btn btn-quiet px-3 py-2 text-sm"><RefreshCw size={16} />刷新成语</button>
       </div>
       <h2 className="display mt-7 break-words text-4xl font-bold tracking-wider text-indigo-950 sm:mt-8 sm:text-5xl sm:tracking-widest">{item.title}</h2>
       {show && <div className="mt-7 min-w-0 border-t border-slate-100 pt-6 text-left sm:mt-8 sm:pt-7">
@@ -83,9 +83,9 @@ export function Quiz() {
       </div>}
       {!show ? <button onClick={() => setShow(true)} className="btn btn-primary mt-9 w-full sm:mt-10 sm:w-auto"><Eye size={18} />查看释义</button> : !result ? <div className="mt-7 sm:mt-8">
         <div className="grid gap-3 sm:grid-cols-3 sm:gap-2">
-          <button onClick={() => void answer('已掌握', '已记录：我掌握了')} className="btn w-full bg-emerald-100 text-emerald-700">我掌握了</button>
+          <button onClick={() => void answer('已掌握', '已记录：我掌握了')} className="btn status-mastered w-full">我掌握了</button>
           <button onClick={() => void answer('易错', '已记录：我记错了')} className="btn btn-danger w-full">我记错了</button>
-          <button onClick={() => void answer('易错', '已加入易错')} className="btn w-full bg-amber-100 text-amber-800">加入易错</button>
+          <button onClick={() => void answer('易错', '已加入易错')} className="btn status-review w-full">加入易错</button>
         </div>
         {needsLogin && <div className="mt-4 rounded-2xl bg-indigo-50 p-4"><p className="mb-3 text-sm leading-6 text-slate-600">登录后才能保存本次抽查结果。</p><LoginRequiredLink className="w-full sm:w-auto" /></div>}
       </div> : <div className="mt-7 sm:mt-8">

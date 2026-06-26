@@ -44,7 +44,7 @@ export function IdiomDetail() {
           <div className="min-w-0">
             <div className="flex flex-wrap gap-2">
               <span className="chip bg-indigo-700 text-white">{idiom.category}</span>
-              <span className="chip bg-white text-slate-600">{idiom.difficulty}</span>
+              <span className="chip status-idle">{idiom.difficulty}</span>
             </div>
             <h1 className="display mt-4 break-words text-3xl font-bold leading-tight text-indigo-950 sm:text-5xl">{idiom.title}</h1>
             <Pronunciation value={idiom.key_pronunciations} note={idiom.pronunciation_note} detail />
@@ -52,7 +52,7 @@ export function IdiomDetail() {
           {user ? <button
             aria-label={record?.is_favorite ? '取消收藏' : '收藏'}
             onClick={() => void update({ is_favorite: !record?.is_favorite })}
-            className={`focus-ring flex size-11 shrink-0 items-center justify-center rounded-full ${record?.is_favorite ? 'bg-amber-100 text-amber-600' : 'bg-white text-slate-400'}`}
+            className={`focus-ring flex size-11 shrink-0 items-center justify-center rounded-full border ${record?.is_favorite ? 'status-favorite' : 'status-idle'}`}
           >
             <Bookmark size={20} fill={record?.is_favorite ? 'currentColor' : 'none'} />
           </button> : null}
@@ -63,19 +63,19 @@ export function IdiomDetail() {
           <Section title="准确释义"><p>{idiom.meaning}</p></Section>
           {idiom.common_mistake && <Section title="常见误用" danger><p>{idiom.common_mistake}</p></Section>}
           <section className="min-w-0 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4 sm:p-5">
-            <h2 className="mb-4 text-sm font-bold tracking-widest text-indigo-700">标准知识区</h2>
+            <h2 className="section-title mb-4">标准知识区</h2>
             <dl className="space-y-4 text-[15px] leading-7 sm:text-base">
               <Info title="适用对象" value={idiom.applicable_objects} />
               <div>
                 <dt className="font-bold text-slate-700">常见搭配</dt>
-                <dd className="mt-2 flex min-w-0 flex-wrap gap-2">{idiom.common_collocations.length ? idiom.common_collocations.map(item => <span key={item} className="max-w-full break-words rounded-lg bg-white px-3 py-1.5 text-slate-600 shadow-sm">{item}</span>) : '待人工核对'}</dd>
+                <dd className="mt-2 flex min-w-0 flex-wrap gap-2">{idiom.common_collocations.length ? idiom.common_collocations.map(item => <span key={item} className="chip status-idle">{item}</span>) : '待人工核对'}</dd>
               </div>
               <Info title="不适用对象或使用限制" value={idiom.usage_restrictions} />
             </dl>
           </section>
           <Section title="标准例句">{idiom.idiom_examples?.length ? <ol className="space-y-3">{idiom.idiom_examples.map((example, exampleIndex) => <li key={example.id} className="break-words border-l-4 border-emerald-400 pl-3 sm:pl-4"><span className="mr-2 text-xs text-slate-400">{exampleIndex + 1}</span>{example.content}</li>)}</ol> : <p className="text-slate-400">待人工核对</p>}</Section>
           <Section title="来源或备注"><p>{idiom.source || '待人工核对'}</p></Section>
-          <div className="flex min-w-0 flex-wrap gap-2">{idiom.tags.map(tag => <span className="chip bg-slate-100 text-slate-600" key={tag}>#{tag}</span>)}</div>
+          <div className="flex min-w-0 flex-wrap gap-2">{idiom.tags.map(tag => <span className="chip status-idle" key={tag}>#{tag}</span>)}</div>
         </div>
         <aside className="min-w-0">
           <div className="rounded-2xl border border-slate-200 p-4 sm:p-5 lg:sticky lg:top-24">
@@ -87,7 +87,7 @@ export function IdiomDetail() {
               <div className="mt-4 grid gap-2">{statuses.map(status => <button
                 onClick={() => void setStatus(status)}
                 key={status}
-                className={`focus-ring flex min-h-11 items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold ${record?.status === status ? (status === '易错' ? 'bg-rose-100 text-rose-700' : 'bg-indigo-100 text-indigo-700') : 'bg-slate-50 text-slate-500'}`}
+                className={`focus-ring flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-bold ${record?.status === status ? (status === '易错' ? 'status-mistake' : status === '已掌握' ? 'status-mastered' : 'status-primary') : 'status-idle'}`}
               >
                 {status === '易错' ? <TriangleAlert size={16} /> : <Check size={16} />} {status}
               </button>)}</div>
@@ -109,7 +109,7 @@ export function IdiomDetail() {
 }
 
 function Section({ title, children, danger = false }: { title: string; children: ReactNode; danger?: boolean }) {
-  return <section className="min-w-0"><h2 className={`mb-3 text-sm font-bold tracking-widest ${danger ? 'text-rose-600' : 'text-indigo-600'}`}>{title}</h2><div className="break-words text-[15px] leading-8 text-slate-700 sm:text-base">{children}</div></section>
+  return <section className="min-w-0"><h2 className={`mb-3 text-sm font-bold tracking-widest ${danger ? 'text-rose-600' : 'text-indigo-600'}`}>{title}</h2><div className={`break-words text-[15px] leading-8 sm:text-base ${title.includes('来源') ? 'meta-text' : 'text-slate-700'}`}>{children}</div></section>
 }
 
 function Info({ title, value }: { title: string; value: string | null }) {
