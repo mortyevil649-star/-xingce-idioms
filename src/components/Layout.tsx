@@ -12,9 +12,9 @@ const nav = [
 ] as const
 
 const socialLinks = [
-  ['B站', 'https://space.bilibili.com/85167755?spm_id_from=333.40164.0.0', 'bilibili'],
-  ['小红书', 'https://www.xiaohongshu.com/user/profile/62dbc5d1000000001e01db70', 'xiaohongshu'],
-  ['Discord', 'https://discord.com/channels/1520097496561352826/1520097497182240810', 'discord'],
+  ['B站', 'https://space.bilibili.com/85167755?spm_id_from=333.40164.0.0', '/social/bilibili.png'],
+  ['小红书', 'https://www.xiaohongshu.com/user/profile/62dbc5d1000000001e01db70', '/social/xiaohongshu.png'],
+  ['Discord', 'https://discord.com/channels/1520097496561352826/1520097497182240810', '/social/discord.png'],
 ] as const
 
 export function Layout() {
@@ -67,16 +67,16 @@ export function Layout() {
         <div>
           <p className="mb-3 text-xs font-bold tracking-widest text-slate-500">关注我</p>
           <div className="flex items-center justify-center gap-3">
-            {socialLinks.map(([label, href, type]) => <a
+            {socialLinks.map(([label, href, icon]) => <a
               key={href}
               href={href}
               target="_blank"
               rel="noreferrer"
               aria-label={label}
               title={label}
-              className="focus-ring flex size-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-500 transition hover:-translate-y-0.5 hover:bg-indigo-50 hover:text-indigo-700"
+              className="focus-ring flex size-11 items-center justify-center rounded-2xl p-2 transition duration-150 hover:-translate-y-0.5 hover:scale-105"
             >
-              <SocialIcon type={type} />
+              <img src={icon} alt="" className="size-7 object-contain" />
             </a>)}
           </div>
         </div>
@@ -99,27 +99,4 @@ export function Layout() {
       }}
     />
   </div>
-}
-
-function SocialIcon({ type }: { type: typeof socialLinks[number][2] }) {
-  if (type === 'bilibili') {
-    return <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none">
-      <path fill="#00A1D6" d="M7.2 4.1a1 1 0 0 1 1.4.1l1.8 2h3.2l1.8-2a1 1 0 1 1 1.5 1.3l-.7.7h1.4A3.4 3.4 0 0 1 21 9.6v6.1a3.4 3.4 0 0 1-3.4 3.4H6.4A3.4 3.4 0 0 1 3 15.7V9.6a3.4 3.4 0 0 1 3.4-3.4h1.4l-.7-.7a1 1 0 0 1 .1-1.4Z" />
-      <rect x="5.3" y="8.2" width="13.4" height="8.8" rx="2.1" fill="#fff" />
-      <path stroke="#00A1D6" strokeLinecap="round" strokeWidth="1.8" d="M9 11.2v2.2m6-2.2v2.2m-4.2 1.8h2.4" />
-    </svg>
-  }
-  if (type === 'xiaohongshu') {
-    return <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none">
-      <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="4" fill="#FF2442" />
-      <path fill="#fff" d="M7.1 8.1h9.8v1.8H13v1.1h3.3v1.7H13v1.6h4.4v1.8H6.6v-1.8h4.3v-1.6H7.7V11h3.2V9.9H7.1V8.1Z" />
-      <path fill="#fff" d="M8.2 17.1c1.8-.5 2.9-1.2 3.8-2.3l1.6.8c-1 1.4-2.4 2.4-4.4 3.1l-1-1.6Zm7.6 1.5c-.8-.9-1.7-1.6-2.8-2.2l1.2-1.2c1.2.5 2.2 1.2 3 2.1l-1.4 1.3Z" opacity=".95" />
-    </svg>
-  }
-  return <svg aria-hidden="true" viewBox="0 0 24 24" className="size-6" fill="none">
-    <path fill="#5865F2" d="M18.7 5.7A16 16 0 0 0 14.8 4l-.5 1a14.8 14.8 0 0 0-4.6 0L9.2 4a16 16 0 0 0-3.9 1.7C2.8 9.4 2.1 13 2.4 16.6A15.8 15.8 0 0 0 7.2 19l1-1.4c-.6-.2-1.1-.5-1.6-.8l.4-.3c3.1 1.5 6.7 1.5 9.8 0l.4.3c-.5.3-1 .6-1.6.8l1 1.4a15.8 15.8 0 0 0 4.9-2.4c.3-4.2-.8-7.8-2.8-10.9Z" />
-    <circle cx="9.2" cy="12.6" r="1.25" fill="#fff" />
-    <circle cx="14.8" cy="12.6" r="1.25" fill="#fff" />
-    <path stroke="#fff" strokeLinecap="round" strokeWidth="1.5" d="M9.2 15.4c1.8.8 3.8.8 5.6 0" />
-  </svg>
 }
