@@ -96,6 +96,19 @@ p, li, strong, span, h1, h2, h3 { overflow-wrap: anywhere; }
 .btn-quiet:hover { background: #f8fafc; color: var(--brand); }
 .btn-danger { border-color: #fecdd3; background: #fff1f2; color: #be123c; }
 .btn-danger:hover { background: #ffe4e6; }
+.btn-danger-quiet {
+  border-color: transparent;
+  background: transparent;
+  color: #be123c;
+  box-shadow: none;
+}
+.btn-danger-quiet:hover {
+  background: #fff1f2;
+  box-shadow: none;
+}
+.btn-danger-quiet:active {
+  box-shadow: none;
+}
 
 .section-title { color: var(--ink); font-size: 1rem; font-weight: 800; letter-spacing: -.01em; }
 .meta-text { color: var(--muted); font-size: .875rem; line-height: 1.7; }
@@ -262,6 +275,16 @@ html.dark .btn-danger {
   border-color: rgba(251,113,133,.35);
   background: rgba(159,18,57,.22);
   color: #fda4af;
+}
+
+html.dark .btn-danger-quiet {
+  border-color: transparent;
+  background: transparent;
+  color: #fda4af;
+}
+
+html.dark .btn-danger-quiet:hover {
+  background: rgba(159,18,57,.18);
 }
 
 html.dark .status-review,

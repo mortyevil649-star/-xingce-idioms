@@ -64,14 +64,14 @@ export function PersonalNotes({ idiomId }: { idiomId: string }) {
           {draftExamples.map((item, index) => <div key={item.id} className="flex min-w-0 items-start gap-2">
             <span className="mt-3 shrink-0 text-xs text-slate-400">{index + 1}</span>
             <textarea value={item.content} onChange={event => setDraftExamples(draftExamples.map(old => old.id === item.id ? { ...old, content: event.target.value } : old))} rows={2} className="focus-ring min-w-0 flex-1 rounded-xl border border-slate-200 p-3" />
-            <button aria-label={`删除例句 ${index + 1}`} onClick={() => setDraftExamples(draftExamples.filter(old => old.id !== item.id))} className="focus-ring flex size-11 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-rose-600"><Trash2 size={17} /></button>
+            <button aria-label={`删除例句 ${index + 1}`} onClick={() => setDraftExamples(draftExamples.filter(old => old.id !== item.id))} className="flex size-11 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-rose-600"><Trash2 size={17} /></button>
           </div>)}
         </div>
       </div>
       <label className="mt-6 block text-sm font-bold text-slate-700">我的易错提醒<input value={reminder} onChange={event => { setReminder(event.target.value); setMessage('') }} className="focus-ring mt-2 min-h-11 w-full rounded-xl border border-slate-200 bg-slate-50 p-3 font-normal" /></label>
       <div className="mt-7 flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:items-center">
         <button onClick={() => void save()} className="btn btn-primary w-full sm:w-auto"><Save size={17} />保存笔记</button>
-        <button onClick={() => void clear()} className="btn btn-danger w-full sm:w-auto"><Trash2 size={17} />清空本条个人笔记</button>
+        <button onClick={() => void clear()} className="btn btn-danger-quiet w-full sm:w-auto"><Trash2 size={17} />清空本条个人笔记</button>
         {message && <span className={`break-words rounded-xl px-3 py-2 text-sm font-bold sm:ml-auto ${message.includes('失败') ? 'notice-error' : 'notice-success'}`}>{message}</span>}
       </div>
     </div>}

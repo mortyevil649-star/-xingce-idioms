@@ -12,7 +12,12 @@ export function IdiomCard({ idiom }: { idiom: Idiom }) {
   const location = useLocation()
   const { records, examples, saveStudy } = useStudy()
   const record = records[idiom.id]
-  const hasNote = Boolean(record?.personal_note || record?.personal_mistake_reminder || examples[idiom.id]?.length)
+  const personalExamples = examples[idiom.id] ?? []
+  const notePreview = record?.personal_note?.trim()
+    || record?.personal_mistake_reminder?.trim()
+    || personalExamples.find(item => item.content.trim())?.content.trim()
+    || ''
+  const hasNote = Boolean(notePreview)
   const mastered = record?.status === '已掌握'
   const frequencyLabel = getExamFrequencyLabel(idiom)
   const update = async (patch: Parameters<typeof saveStudy>[1]) => {
@@ -42,6 +47,7 @@ export function IdiomCard({ idiom }: { idiom: Idiom }) {
       </div>
       <Pronunciation value={idiom.key_pronunciations} />
       <p className="mt-4 line-clamp-2 text-[15px] leading-7 text-slate-600 sm:text-base">{idiom.meaning}</p>
+      {hasNote && <p className="mt-3 line-clamp-1 text-xs leading-5 text-slate-400">我的笔记：{notePreview}</p>}
       <div className="mt-4 flex min-w-0 flex-wrap gap-2">
         <span className="chip status-primary">{idiom.category}</span>
         <span className="chip status-idle">{idiom.difficulty}</span>
