@@ -124,7 +124,7 @@ export function Home() {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
           [idioms.length, '成语总数', BookOpen, 'text-indigo-700'],
-          [mastered, '新掌握', CheckCircle2, 'text-emerald-600'],
+          [mastered, '已掌握', CheckCircle2, 'text-emerald-600'],
           [reviewCount, '可复习', Clock3, 'text-amber-600'],
           [mistakes, '易错', TriangleAlert, 'text-rose-600'],
         ].map(([value, label, Icon, color]) => <div key={String(label)} className="paper flex items-center gap-4 rounded-2xl p-4 sm:block sm:p-5">

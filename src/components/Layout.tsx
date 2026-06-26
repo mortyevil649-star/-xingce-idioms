@@ -11,6 +11,16 @@ const nav = [
   ['/quiz', '随机抽查', Shuffle],
 ] as const
 
+const friendLinks = [
+  ['国家公务员局', 'https://www.scs.gov.cn/'],
+  ['中国人事考试网', 'http://www.cpta.com.cn/'],
+  ['粉笔公考', 'https://www.fenbi.com/page/home'],
+  ['公考雷达', 'https://www.gongkaoleida.com/'],
+  ['汉典', 'https://www.zdic.net/'],
+  ['百度汉语', 'https://hanyu.baidu.com/'],
+  ['汉程成语', 'https://cy.httpcn.com/'],
+] as const
+
 export function Layout() {
   const { user, isAdmin, signOut } = useAuth()
   const location = useLocation()
@@ -56,7 +66,23 @@ export function Layout() {
       </div>
     </header>
     <main className="mx-auto w-full max-w-6xl px-3 py-5 sm:px-4 sm:py-10"><Outlet /></main>
-    <footer className="mx-auto max-w-6xl px-3 py-7 text-center text-xs text-slate-400 sm:px-4 sm:py-8">行测成语积累 · 学得慢一点，记得牢一点</footer>
+    <footer className="mx-auto max-w-6xl px-3 py-7 text-center text-xs text-slate-400 sm:px-4 sm:py-8">
+      <div className="paper mb-5 rounded-2xl px-4 py-4 text-left sm:px-5">
+        <p className="text-xs font-bold tracking-widest text-slate-500">友情链接</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {friendLinks.map(([label, href]) => <a
+            key={href}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            className="chip status-idle hover:text-indigo-700"
+          >
+            {label}
+          </a>)}
+        </div>
+      </div>
+      <p>行测成语积累 · 学得慢一点，记得牢一点</p>
+    </footer>
     <ConfirmDialog
       open={confirmingSignOut}
       title="退出登录？"
