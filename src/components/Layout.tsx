@@ -74,9 +74,9 @@ export function Layout() {
               rel="noreferrer"
               aria-label={label}
               title={label}
-              className="focus-ring flex size-11 items-center justify-center rounded-2xl p-2 transition duration-150 hover:-translate-y-0.5 hover:scale-105"
+              className="focus-ring flex size-11 items-center justify-center rounded-2xl transition duration-150 hover:-translate-y-0.5 hover:scale-105"
             >
-              <img src={icon} alt="" className="size-7 object-contain" />
+              <img src={icon} alt="" className="size-8 object-contain" />
             </a>)}
           </div>
         </div>
