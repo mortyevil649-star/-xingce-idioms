@@ -8,7 +8,7 @@ import { Pronunciation } from '../components/Pronunciation'
 import { PersonalNotes } from '../components/PersonalNotes'
 import { LoginRequiredLink } from '../components/LoginRequiredLink'
 import { useIdiomRelations } from '../hooks/useIdiomRelations'
-import type { Idiom, IdiomRelation, IdiomRelationType, StudyStatus } from '../types/database'
+import type { Idiom, IdiomRelation, IdiomRelationTerm, IdiomRelationType, StudyStatus } from '../types/database'
 
 const statuses: StudyStatus[] = ['未学', '已掌握', '易错']
 
@@ -33,9 +33,12 @@ export function IdiomDetail() {
     .filter(relation => relation.source_id === idiom.id || relation.target_id === idiom.id)
     .map(relation => ({
       relation,
-      target: idioms.find(item => item.id === (relation.source_id === idiom.id ? relation.target_id : relation.source_id))
+      target: relation.target_term_id
+        ? relation.target_term
+        : idioms.find(item => item.id === (relation.source_id === idiom.id ? relation.target_id : relation.source_id)),
+      isTerm: Boolean(relation.target_term_id)
     }))
-    .filter((item): item is { relation: IdiomRelation; target: Idiom } => Boolean(item.target))
+    .filter((item): item is { relation: IdiomRelation; target: Idiom | IdiomRelationTerm; isTerm: boolean } => Boolean(item.target))
   const record = records[idiom.id]
   const update = async (patch: Parameters<typeof saveStudy>[1]) => {
     if (user) await saveStudy(idiom.id, patch)
@@ -132,7 +135,7 @@ const relationTypeStyles: Record<IdiomRelationType, string> = {
   related: 'status-primary'
 }
 
-function IdiomRelationGraph({ currentTitle, items }: { currentTitle: string; items: { relation: IdiomRelation; target: Idiom }[] }) {
+function IdiomRelationGraph({ currentTitle, items }: { currentTitle: string; items: { relation: IdiomRelation; target: Idiom | IdiomRelationTerm; isTerm: boolean }[] }) {
   if (!items.length) return null
   const grouped = (Object.keys(relationTypeLabels) as IdiomRelationType[])
     .map(type => ({
@@ -165,7 +168,16 @@ function IdiomRelationGraph({ currentTitle, items }: { currentTitle: string; ite
             <span className="hidden h-px flex-1 bg-indigo-100 sm:block" />
           </div>
           <div className="grid min-w-0 gap-3 sm:grid-cols-2">
-            {group.items.map(({ relation, target }) => <Link
+            {group.items.map(({ relation, target, isTerm }) => isTerm ? <div
+              key={relation.id}
+              className="paper flex min-h-24 min-w-0 items-center justify-between gap-3 rounded-2xl p-4"
+            >
+              <span className="min-w-0">
+                <span className="chip status-idle">关系词库</span>
+                <strong className="display mt-2 block break-words text-xl text-indigo-950">{target.title}</strong>
+                <span className="mt-2 block break-words text-sm leading-6 text-slate-600">{relation.comparison_note}</span>
+              </span>
+            </div> : <Link
               key={relation.id}
               to={`/idioms/${target.id}`}
               className="paper paper-hover group flex min-h-24 min-w-0 items-center justify-between gap-3 rounded-2xl p-4"

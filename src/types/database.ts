@@ -37,11 +37,24 @@ export interface Idiom {
 export interface IdiomRelation {
   id: string
   source_id: string
-  target_id: string
+  target_id: string | null
+  target_term_id: string | null
   relation_type: IdiomRelationType
   comparison_note: string
   is_published: boolean
   sort_order: number
+  created_at: string
+  updated_at: string
+  target_term?: IdiomRelationTerm | null
+}
+
+export interface IdiomRelationTerm {
+  id: string
+  title: string
+  key_pronunciations: string | null
+  meaning: string | null
+  source: string | null
+  is_published: boolean
   created_at: string
   updated_at: string
 }
@@ -89,7 +102,8 @@ export interface Database {
       profiles: Table<Profile, { id: string; role?: ProfileRole }, { role?: ProfileRole }>
       idioms: Table<Idiom, Omit<Idiom, 'id' | 'created_at' | 'updated_at' | 'idiom_examples'> & { id?: string }, Partial<Omit<Idiom, 'idiom_examples'>>>
       idiom_examples: Table<IdiomExample, Omit<IdiomExample, 'id' | 'created_at' | 'updated_at'> & { id?: string }, Partial<IdiomExample>>
-      idiom_relations: Table<IdiomRelation, Omit<IdiomRelation, 'id' | 'created_at' | 'updated_at'> & { id?: string }, Partial<IdiomRelation>>
+      idiom_relation_terms: Table<IdiomRelationTerm, Omit<IdiomRelationTerm, 'id' | 'created_at' | 'updated_at'> & { id?: string }, Partial<IdiomRelationTerm>>
+      idiom_relations: Table<IdiomRelation, Omit<IdiomRelation, 'id' | 'created_at' | 'updated_at' | 'target_term'> & { id?: string }, Partial<Omit<IdiomRelation, 'target_term'>>>
       user_idiom_study: Table<StudyRecord, Omit<StudyRecord, 'id' | 'created_at' | 'updated_at'> & { id?: string }, Partial<StudyRecord>>
       user_idiom_examples: Table<UserIdiomExample, Omit<UserIdiomExample, 'id' | 'created_at' | 'updated_at'> & { id?: string }, Partial<UserIdiomExample>>
     }

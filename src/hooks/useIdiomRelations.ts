@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import type { IdiomRelation } from '../types/database'
+import type { IdiomRelation, IdiomRelationTerm } from '../types/database'
 
 export function useIdiomRelations(includeHidden = false) {
   const [relations, setRelations] = useState<IdiomRelation[]>([])
@@ -23,9 +23,18 @@ export function useIdiomRelations(includeHidden = false) {
     if (!includeHidden) query = query.eq('is_published', true)
 
     const { data, error: queryError } = await query
-    if (queryError) setError(queryError.message)
+    const { data: terms, error: termsError } = await supabase
+      .from('idiom_relation_terms')
+      .select('*')
+      .order('title')
+    const termTableMissing = termsError?.code === '42P01' || termsError?.code === '42703'
+    if (queryError || (termsError && !termTableMissing)) setError(queryError?.message || termsError?.message || '')
     else {
-      setRelations((data ?? []) as IdiomRelation[])
+      const termsById = new Map(((termTableMissing ? [] : terms ?? []) as IdiomRelationTerm[]).map(term => [term.id, term]))
+      setRelations(((data ?? []) as IdiomRelation[]).map(relation => ({
+        ...relation,
+        target_term: relation.target_term_id ? termsById.get(relation.target_term_id) ?? null : null
+      })))
       setError('')
     }
     setLoading(false)
@@ -38,6 +47,7 @@ export function useIdiomRelations(includeHidden = false) {
     if (!client) return
     const channel = client.channel(`idiom-relations-${includeHidden ? 'admin' : 'public'}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'idiom_relations' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'idiom_relation_terms' }, refresh)
       .subscribe()
     return () => { void client.removeChannel(channel) }
   }, [includeHidden, refresh])
