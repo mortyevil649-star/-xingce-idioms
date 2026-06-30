@@ -7,7 +7,8 @@ import { useStudy } from '../contexts/StudyContext'
 import { Pronunciation } from '../components/Pronunciation'
 import { PersonalNotes } from '../components/PersonalNotes'
 import { LoginRequiredLink } from '../components/LoginRequiredLink'
-import type { StudyStatus } from '../types/database'
+import { useIdiomRelations } from '../hooks/useIdiomRelations'
+import type { Idiom, IdiomRelation, IdiomRelationType, StudyStatus } from '../types/database'
 
 const statuses: StudyStatus[] = ['未学', '已掌握', '易错']
 
@@ -16,6 +17,7 @@ export function IdiomDetail() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { idioms, loading, error } = useIdioms()
+  const { relations } = useIdiomRelations()
   const { records, saveStudy } = useStudy()
   const idiom = idioms.find(item => item.id === id)
 
@@ -27,6 +29,13 @@ export function IdiomDetail() {
   const index = idioms.findIndex(item => item.id === idiom.id)
   const previous = idioms[index - 1]
   const next = idioms[index + 1]
+  const relatedItems = relations
+    .filter(relation => relation.source_id === idiom.id || relation.target_id === idiom.id)
+    .map(relation => ({
+      relation,
+      target: idioms.find(item => item.id === (relation.source_id === idiom.id ? relation.target_id : relation.source_id))
+    }))
+    .filter((item): item is { relation: IdiomRelation; target: Idiom } => Boolean(item.target))
   const record = records[idiom.id]
   const update = async (patch: Parameters<typeof saveStudy>[1]) => {
     if (user) await saveStudy(idiom.id, patch)
@@ -100,12 +109,78 @@ export function IdiomDetail() {
         </aside>
       </div>
     </article>
+    <IdiomRelationGraph currentTitle={idiom.title} items={relatedItems} />
     <nav aria-label="成语顺序导航" className="mt-4 grid min-w-0 gap-3 sm:mt-5 sm:grid-cols-2">
       {previous && <Link to={`/idioms/${previous.id}`} className="paper paper-hover flex min-h-20 min-w-0 items-center gap-3 rounded-2xl p-4"><ArrowLeft className="shrink-0 text-indigo-600" /><span className="min-w-0"><small className="block text-xs text-slate-400">上一个成语</small><strong className="display mt-1 block break-words text-lg text-indigo-950">{previous.title}</strong></span></Link>}
       {next && <Link to={`/idioms/${next.id}`} className="paper paper-hover flex min-h-20 min-w-0 items-center justify-between gap-3 rounded-2xl p-4 text-right sm:col-start-2"><span className="ml-auto min-w-0"><small className="block text-xs text-slate-400">下一个成语</small><strong className="display mt-1 block break-words text-lg text-indigo-950">{next.title}</strong></span><ArrowRight className="shrink-0 text-indigo-600" /></Link>}
     </nav>
     <PersonalNotes key={idiom.id} idiomId={idiom.id} />
   </div>
+}
+
+const relationTypeLabels: Record<IdiomRelationType, string> = {
+  confusion: '易混词',
+  synonym: '近义词',
+  antonym: '反义词',
+  related: '关联辨析'
+}
+
+const relationTypeStyles: Record<IdiomRelationType, string> = {
+  confusion: 'status-review',
+  synonym: 'status-mastered',
+  antonym: 'status-mistake',
+  related: 'status-primary'
+}
+
+function IdiomRelationGraph({ currentTitle, items }: { currentTitle: string; items: { relation: IdiomRelation; target: Idiom }[] }) {
+  if (!items.length) return null
+  const grouped = (Object.keys(relationTypeLabels) as IdiomRelationType[])
+    .map(type => ({
+      type,
+      items: items
+        .filter(item => item.relation.relation_type === type)
+        .sort((a, b) => a.relation.sort_order - b.relation.sort_order)
+    }))
+    .filter(group => group.items.length)
+
+  return <section className="paper mt-5 min-w-0 overflow-hidden rounded-2xl p-5 sm:mt-6 sm:p-7">
+    <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <p className="text-sm font-bold tracking-widest text-indigo-600">成语关系</p>
+        <h2 className="display mt-1 break-words text-2xl font-bold text-indigo-950 sm:text-3xl">{currentTitle}</h2>
+      </div>
+      <p className="text-sm leading-6 text-slate-500">展示已审核发布的易混、近义、反义和关联辨析。</p>
+    </div>
+    <div className="mt-5 grid gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+      <div className="hidden rounded-2xl border border-indigo-100 bg-indigo-50/70 p-5 text-center lg:flex lg:min-h-full lg:items-center lg:justify-center">
+        <div>
+          <span className="chip status-primary">中心成语</span>
+          <strong className="display mt-3 block text-2xl text-indigo-950">{currentTitle}</strong>
+        </div>
+      </div>
+      <div className="min-w-0 space-y-5">
+        {grouped.map(group => <div key={group.type} className="min-w-0">
+          <div className="mb-3 flex items-center gap-2">
+            <span className={`chip ${relationTypeStyles[group.type]}`}>{relationTypeLabels[group.type]}</span>
+            <span className="hidden h-px flex-1 bg-indigo-100 sm:block" />
+          </div>
+          <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+            {group.items.map(({ relation, target }) => <Link
+              key={relation.id}
+              to={`/idioms/${target.id}`}
+              className="paper paper-hover group flex min-h-24 min-w-0 items-center justify-between gap-3 rounded-2xl p-4"
+            >
+              <span className="min-w-0">
+                <strong className="display block break-words text-xl text-indigo-950">{target.title}</strong>
+                <span className="mt-2 block break-words text-sm leading-6 text-slate-600">{relation.comparison_note}</span>
+              </span>
+              <ArrowRight className="shrink-0 text-indigo-600 transition group-hover:translate-x-0.5" size={18} />
+            </Link>)}
+          </div>
+        </div>)}
+      </div>
+    </div>
+  </section>
 }
 
 function Section({ title, children, danger = false }: { title: string; children: ReactNode; danger?: boolean }) {
