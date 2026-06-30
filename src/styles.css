@@ -14,7 +14,7 @@
   --line: #e6eaf2;
   --paper-radius: 1.25rem;
   --paper-shadow: 0 14px 36px rgba(31, 41, 85, .075);
-  --paper-shadow-hover: 0 18px 46px rgba(31, 41, 85, .12);
+  --paper-shadow-hover: var(--paper-shadow);
 }
 
 html.dark {
@@ -473,5 +473,5 @@ html.dark footer {
 
 @media (prefers-reduced-motion: no-preference) {
   .paper { transition: transform .2s, box-shadow .2s; }
-  .paper-hover:hover { transform: translateY(-2px); box-shadow: var(--paper-shadow-hover); }
+  .paper-hover:hover { transform: translateY(-2px); box-shadow: var(--paper-shadow); }
 }
