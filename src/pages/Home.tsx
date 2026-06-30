@@ -99,6 +99,7 @@ const encouragements = [
 
 const dayMs = 86400000
 const shanghaiOffsetMs = 8 * 60 * 60 * 1000
+const lastLearningKey = 'xingce-last-learning-idiom-id'
 
 function getShanghaiDayStamp() {
   return Math.floor((Date.now() + shanghaiOffsetMs) / dayMs)
@@ -153,6 +154,12 @@ export function Home() {
   const reviewCount = mastered
   const estimatedMinutes = Math.max(1, Math.ceil(reviewSize * 0.75))
   const random = useMemo(() => idioms.length ? idioms[Math.floor(Math.random() * idioms.length)] : null, [idioms])
+  const startLearningPath = useMemo(() => {
+    if (!idioms.length || typeof window === 'undefined') return '/idioms'
+    const lastId = window.localStorage.getItem(lastLearningKey)
+    const target = idioms.find(item => item.id === lastId) ?? idioms[0]
+    return `/idioms/${target.id}`
+  }, [idioms])
   const dailyTip = useMemo(() => {
     const dayIndex = dailyStamp % dailyTips.length
     return dailyTips[dayIndex]
@@ -169,7 +176,7 @@ export function Home() {
         <h1 className="display mt-4 text-3xl font-bold leading-tight min-[390px]:text-4xl sm:mt-5 sm:text-6xl">把容易混淆的词，<br /><span className="text-amber-300">真正分清楚。</span></h1>
         <p className="mt-5 max-w-xl text-[15px] leading-7 text-indigo-200 sm:mt-6 sm:text-base">专注行测高频易错成语。</p>
         <div className="mt-7 grid gap-3 sm:mt-8 sm:flex sm:flex-wrap">
-          <Link className="btn w-full bg-white text-indigo-950 sm:w-auto" to="/idioms">开始学习 <ArrowRight size={18} /></Link>
+          <Link className="btn w-full bg-white text-indigo-950 sm:w-auto" to={startLearningPath}>开始学习 <ArrowRight size={18} /></Link>
           <Link className="btn w-full border border-indigo-700/70 text-white sm:w-auto" to="/quiz"><Shuffle size={17} />随机抽查</Link>
         </div>
       </div>

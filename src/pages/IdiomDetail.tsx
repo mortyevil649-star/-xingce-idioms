@@ -11,6 +11,7 @@ import { useIdiomRelations } from '../hooks/useIdiomRelations'
 import type { Idiom, IdiomRelation, IdiomRelationTerm, IdiomRelationType, StudyStatus } from '../types/database'
 
 const statuses: StudyStatus[] = ['未学', '已掌握', '易错']
+const lastLearningKey = 'xingce-last-learning-idiom-id'
 
 export function IdiomDetail() {
   const { id } = useParams()
@@ -22,6 +23,11 @@ export function IdiomDetail() {
   const idiom = idioms.find(item => item.id === id)
 
   useEffect(() => window.scrollTo(0, 0), [id])
+  useEffect(() => {
+    if (idiom && typeof window !== 'undefined') {
+      window.localStorage.setItem(lastLearningKey, idiom.id)
+    }
+  }, [idiom])
 
   if (loading) return <div className="paper rounded-2xl p-6 text-center text-slate-500 sm:p-10">正在读取成语…</div>
   if (!idiom) return <div className="paper rounded-2xl p-6 text-center sm:p-10">{error || '该成语不存在或未公开。'}<br /><Link className="mt-4 inline-flex min-h-11 items-center text-indigo-700" to="/idioms">返回成语库</Link></div>
